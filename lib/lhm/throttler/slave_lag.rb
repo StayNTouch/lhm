@@ -64,6 +64,8 @@ module Lhm
       end
 
       def slave_lag(conn)
+        conn.reconnect! unless conn.active?
+
         if conn.respond_to?(:exec_query)
           result = conn.exec_query(SQL_SELECT_MAX_SLAVE_LAG)
           result.map { |row| row['Seconds_Behind_Master'].to_i }
